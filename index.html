@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+	 <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <!---fontawesome---->
+    <script src="https://kit.fontawesome.com/fe39f99d95.js" crossorigin="anonymous"></script>
+
+
+	<title>Video Conferencing</title>
+
+	<style type="text/css">
+
+		html {
+			width: 100%;
+			height: 100%;
+		}
+		body {
+			width: 100%;
+			height: 100%;
+		}
+		.header {
+
+			text-align: center;
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+
+		.header_img {
+
+			width: 200px;
+			margin-left: 5%;
+		}
+		.room_name_form {
+
+			width: 100%;
+			padding: 20px;
+			box-shadow: 2px 4px 4px #d3d3d3;
+			border-radius: 10px;
+			border: 1px solid #d3d3d3;
+			margin: 15px 5px;
+			background: #d3d3d3;
+		}
+
+
+		.room_name_form input{
+
+			font-size: 20px;
+			text-align: center;
+		}
+
+		.create_room {
+
+			width: 80%;
+			margin-left: 10%;
+			background: #f33;
+			border: 1px solid #f33;
+			padding: 10px;
+			text-align: center;
+			font-size: 20px;
+			color: #fff;
+			border-radius: 5px;
+		}
+		.create_room:hover {
+
+			opacity: .8;
+		}
+
+		.loader {
+
+			font-size: 25px;
+			color: #f33;
+		}
+
+		
+
+		
+
+	@media only screen and (min-width: 768px) {
+
+
+		.header_img {
+			width: 400px;
+			margin-left: 30%;
+		}
+
+		.room_name_form {
+
+			width: 500px;
+			margin-left: 28%;
+		}
+
+		.room_name_form input{
+
+			font-size: 25px;
+		}
+
+
+		
+	}
+
+	</style>
+</head>
+<body>
+
+	<div class="container"  id="main_page">
+		
+
+		<h2 class="header text-danger">Create a meeting today and share with your friends</h2>
+
+		<img src="video.jpg" class="header_img">
+
+		<h2 class="header">Ready? lets go</h2>
+
+		<form id="room_name_form" class="room_name_form">
+			
+			<div class="form-group" style="text-align: center;">
+			    <label for="room_name" >Enter room name</label>
+			    <input type="text" class="form-control" id="room_name" placeholder="room name">
+			</div>
+
+			<div class="form-group" style="text-align: center;">
+			    <label for="start_date" >Start date</label>
+			    <input type="date" class="form-control" id="start_date">
+			</div>
+			<div class="form-group" style="text-align: center;">
+			    <label for="start_time" >Start Time</label>
+			    <input type="time" class="form-control" id="start_time">
+			</div>
+			<button class="create_room" id="create_room">Create a meeting</button>
+
+		</form>
+	</div>
+
+
+	<div class="container">
+		
+		<p id="text"></p>
+	</div>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="error_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title text-danger" id="exampleModalLabel">Error</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <p class="text-danger" id="error_msg"></p>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+
+	
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+
+    <script src="access_server.js"></script>
+
+
+    <!----
+	<script src="webrtc.js"></script>
+
+	---->
+
+	<script type="text/javascript">
+		
+		var loader = '<p class="loader"><i class="fas fa-spinner fa-spin"></i></p>'
+		var user_id = Math.random() * 10
+		$('#room_name_form').submit((e)=>{
+
+			e.preventDefault()
+			
+			if($('#room_name').val() == '') {
+
+				$('#error_msg').html('Enter a valid room name')
+				$('#error_modal').modal('show')
+				return
+
+			}else if(($('#start_date').val() !="" && $('#start_time').val() =="") || ($('#start_date').val() =="" && $('#start_time').val() !="")) {
+
+				$('#error_msg').html('start date and start time are required')
+				$('#error_modal').modal('show')
+				return
+
+			}else {
+
+				//create room
+
+				$('#create_room').append(loader)
+				$('#create_room').prop('disabled', 'true')
+				var room_name = $('#room_name').val()
+
+				formData = new FormData()
+					formData.append('room_name', room_name)
+					formData.append('user_id', user_id)
+					formData.append('start_date', $('#start_date').val())
+					formData.append('start_time', $('#start_time').val())
+
+				var controller = {
+
+					url: 'saveroomtodb.php?action=set_room',
+					data: formData,
+					method: 'POST',
+					callBackFunction: (result) => {
+
+						console.log(result)
+
+						if(result == 'failed') {
+							$('#error_msg').html('failed to create room, try again later')
+							$('#error_modal').modal('show')
+						}else {
+
+							var link = 'room_info.php?room=' + result
+							console.log(link)
+							location.href = link
+						}
+
+						$('.loader').remove()
+						$('#create_room').prop('disabled', 'false')
+					},
+					error: (err) => {
+
+						console.log(err)
+					}
+				}
+
+				accessServer(controller)
+					
+			}
+
+		});
+	</script>
+
+</body>
+</html>
